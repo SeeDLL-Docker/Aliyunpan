@@ -39,43 +39,22 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Read previous commit Dockerfile and get previous version
+      - name: Check version and build
         run: |
           cat previous_ver.txt
           prev_version=$(cat previous_ver.txt)
-          echo "::set-output name=prev_version::$prev_version"
+          current_version=$(echo "$(grep -n 'ALIYUNPAN_VER=' context/Dockerfile | awk -F: '{print $2}' | cut -d "=" -f 2)")
 
-      - name: Read current version
-        run: |
-          echo `grep -n "ALIYUNPAN_VER=" context/Dockerfile`|awk -F: '{print $2}'|cut -d "=" -f 2 >> ALIYUNPAN_CURRENT_VER.txt
-          cat ALIYUNPAN_CURRENT_VER.txt 
-          current_version=$(cat ALIYUNPAN_CURRENT_VER.txt)
-          echo "::set-output name=current_version::$current_version"
-
-      - name: Check if version changed
-        id: version_changed
-        run: |
-          previous_version=${{ steps.get_prev_version.outputs.prev_version }}
-          current_version=${{ steps.get_current_version.outputs.current_version }}
-          
-          # 比较上一次提交的版本号与当前的版本号
-          # 如果版本号相同，将 build_required 设置为 false，不进行构建
-          # 如果版本号不同，将 build_required 设置为 true，进行构建
           if [[ "$previous_version" == "$current_version" ]]; then
             echo "Version unchanged. Skipping build."
             echo "::set-output name=build_required::false"
           else
             echo "Version changed. Building image."
-            echo "::set-output name=build_required::true"
-          fi
-
-      - name: Build Docker image
-        if: steps.version_changed.outputs.build_required == 'true'
-        run: |
-          docker buildx build --load -f ./context/Dockerfile \
+            docker buildx build --load -f ./context/Dockerfile \
             --tag ${{ secrets.REGISTRY }}/${{ secrets.ALIYUNPAN }}:latest \
             --tag ${{ secrets.REGISTRY }}/${{ secrets.ALIYUNPAN }}:${{ env.ALIYUNPAN_VER }} \
             ./context
+          fi
 
       # 只有main分支，并且符合手动推送或定时打包条件时执行推送
       - name: Push Docker image

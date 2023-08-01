@@ -41,16 +41,17 @@ jobs:
 
       - name: Read previous commit Dockerfile and get previous version
         run: |
-          git show HEAD~1:context/Dockerfile | grep -n "ALIYUNPAN_VER=" | awk -F: '{print $2}'|cut -d "=" -f 2 >> ALIYUNPAN_PREVIOUS_VER.txt
+          git log --pretty=format:%H | awk 'NR==2' > previous_commit.txt
+          git show $(cat previous_commit.txt):context/Dockerfile | grep -n "ALIYUNPAN_VER=" | awk -F: '{print $2}'|cut -d "=" -f 2 >> ALIYUNPAN_PREVIOUS_VER.txt
           cat ALIYUNPAN_PREVIOUS_VER.txt
-          prev_version=echo "$(cat ALIYUNPAN_PREVIOUS_VER.txt)"
+          prev_version=$(cat ALIYUNPAN_PREVIOUS_VER.txt)
           echo "::set-output name=prev_version::$prev_version"
 
       - name: Read current version
         run: |
           echo "ALIYUNPAN_VER=$(echo `grep -n "ALIYUNPAN_VER=" context/Dockerfile`|awk -F: '{print $2}'|cut -d "=" -f 2)" >> ALIYUNPAN_CURRENT_VER.txt
           cat ALIYUNPAN_CURRENT_VER.txt 
-          current_version=echo "$(cat ALIYUNPAN_CURRENT_VER.txt)"
+          current_version=$(cat ALIYUNPAN_CURRENT_VER.txt)
           echo "::set-output name=current_version::$current_version"
 
       - name: Check if version changed

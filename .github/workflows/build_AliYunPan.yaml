@@ -39,13 +39,16 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
+      - name: 'Set Version'
+        run: |
+          echo "ALIYUNPAN_VER=$(echo `grep -n "ALIYUNPAN_VER=" Aliyunpan/Dockerfile`|awk -F: '{print $2}'|cut -d "=" -f 2)" >> $GITHUB_ENV
+
       - name: Check version and build
         run: |
           cat previous_ver.txt
           prev_version=$(cat previous_ver.txt)
-          current_version=$(echo "$(grep -n 'ALIYUNPAN_VER=' context/Dockerfile | awk -F: '{print $2}' | cut -d "=" -f 2)")
 
-          if [[ "$previous_version" == "$current_version" ]]; then
+          if [[ "$previous_version" == "${{ env.ALIYUNPAN_VER }}" ]]; then
             echo "Version unchanged. Skipping build."
             echo "::set-output name=build_required::false"
           else

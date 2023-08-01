@@ -17,7 +17,7 @@ jobs:
     environment: env
     steps:
       - name: Checkout
-        run: git clone https://github.com/SeeDLL-Docker/Aliyunpan.git .
+        uses: actions/checkout@v3
 
       - name: Get current date
         id: date
@@ -41,10 +41,8 @@ jobs:
 
       - name: Read previous commit Dockerfile and get previous version
         run: |
-          git log --pretty=format:%H | awk 'NR==2' > previous_commit.txt
-          git show $(cat previous_commit.txt):context/Dockerfile | grep -n "ALIYUNPAN_VER=" | awk -F: '{print $2}'|cut -d "=" -f 2 >> ALIYUNPAN_PREVIOUS_VER.txt
-          cat ALIYUNPAN_PREVIOUS_VER.txt
-          prev_version=$(cat ALIYUNPAN_PREVIOUS_VER.txt)
+          cat previous_ver.txt
+          prev_version=$(cat previous_ver.txt)
           echo "::set-output name=prev_version::$prev_version"
 
       - name: Read current version

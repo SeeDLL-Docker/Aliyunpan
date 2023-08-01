@@ -41,7 +41,7 @@ jobs:
 
       - name: 'Set Version'
         run: |
-          echo "ALIYUNPAN_VER=$(echo `grep -n "ALIYUNPAN_VER=" Aliyunpan/Dockerfile`|awk -F: '{print $2}'|cut -d "=" -f 2)" >> $GITHUB_ENV
+          echo "ALIYUNPAN_VER=$(echo `grep -n "ALIYUNPAN_VER=" context/Dockerfile`|awk -F: '{print $2}'|cut -d "=" -f 2)" >> $GITHUB_ENV
 
       - name: Check version and build
         run: |

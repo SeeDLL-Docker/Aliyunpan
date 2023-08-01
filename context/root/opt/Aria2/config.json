@@ -1,0 +1,12 @@
+{
+   "enable-rpc": true,
+   "rpc-listen-all": true,
+   "rpc-allow-origin-all": true,
+   "rpc-listen-port": 6800,
+   "max-connection-per-server": 10,  
+   "split": 10,
+   "min-split-size": 10M,
+   "max-overall-upload-limit": 100K, 
+   "max-overall-download-limit": 100K,
+   "server-stat-of": 60
+}

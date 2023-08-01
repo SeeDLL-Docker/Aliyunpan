@@ -49,7 +49,7 @@ jobs:
 
       - name: Read current version
         run: |
-          echo "ALIYUNPAN_VER=$(echo `grep -n "ALIYUNPAN_VER=" context/Dockerfile`|awk -F: '{print $2}'|cut -d "=" -f 2)" >> ALIYUNPAN_CURRENT_VER.txt
+          echo `grep -n "ALIYUNPAN_VER=" context/Dockerfile`|awk -F: '{print $2}'|cut -d "=" -f 2 >> ALIYUNPAN_CURRENT_VER.txt
           cat ALIYUNPAN_CURRENT_VER.txt 
           current_version=$(cat ALIYUNPAN_CURRENT_VER.txt)
           echo "::set-output name=current_version::$current_version"

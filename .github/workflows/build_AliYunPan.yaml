@@ -4,7 +4,7 @@ name: Ubuntu Aliyunpan image
 on:
   push:
     branches:
-#      - main
+      - main
       - dev
   pull_request:
     branches:
@@ -53,14 +53,16 @@ jobs:
             echo "::set-output name=build_required::false"
           else
             echo "Version changed. Building image."
-            docker buildx build --load -f ./context/Dockerfile \
-            --tag ${{ secrets.REGISTRY }}/${{ secrets.ALIYUNPAN }}:latest \
-            --tag ${{ secrets.REGISTRY }}/${{ secrets.ALIYUNPAN }}:${{ env.ALIYUNPAN_VER }} \
-            ./context
-          fi
 
-      # 只有main分支，并且符合手动推送或定时打包条件时执行推送
-      - name: Push Docker image
-        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'schedule' && github.ref == 'refs/heads/main'))
-        run: |
-          docker push ${{ secrets.REGISTRY }}/${{ secrets.BEDROCKCONNECT }}:latest
+            TagDockerPush=""
+            if [[ ${{ github.ref }} == 'refs/heads/main' && (${{ github.event_name }} == 'push' || (${{ github.event_name }} == 'schedule' && ${{ github.ref }} == 'refs/heads/main')) ]]; then
+              TagDockerPush=" --push"
+            else
+              echo "Is not main. Skipping push..."
+            fi
+
+            TagLast="--tag ${{ secrets.REGISTRY }}/${{ secrets.ALIYUNPAN }}:latest"
+            TagVer="--tag ${{ secrets.REGISTRY }}/${{ secrets.ALIYUNPAN }}:${{ env.ALIYUNPAN_VER }}"
+
+            docker buildx build $TagDockerPush -f ./context/Dockerfile $TagLast $TagVer ./context
+          fi

@@ -1,6 +1,6 @@
 FROM jlesage/baseimage-gui:ubuntu-22.04-v4
 
-ARG ALIYUNPAN_VER=3.11.23
+ARG ALIYUNPAN_VER=3.11.24
 
 ENV APP_NAME="aliyunpan" \
     APP_VERSION=${ALIYUNPAN_VER} \

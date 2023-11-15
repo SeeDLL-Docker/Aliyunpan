@@ -12,11 +12,6 @@
 小白羊网盘 - Powered by 阿里云盘:
 [https://github.com/gaozhangmin/aliyunpan ](https://github.com/gaozhangmin/aliyunpan "https://github.com/gaozhangmin/aliyunpan")                                       
 
-### 版本：
-
-|名称|版本|说明|
-|:-|:-|:-|
-|小白羊云盘|3.11.23|amd64|
 
 #### 注意：
 

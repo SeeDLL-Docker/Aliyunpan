@@ -1,7 +1,7 @@
 #FROM jlesage/baseimage-gui:ubuntu-22.04-v4
 FROM seedll/baseimage-gui
 
-ARG ALIYUNPAN_VER=3.13.3
+ARG ALIYUNPAN_VER=3.13.5
 
 ENV APP_NAME="aliyunpan" \
     APP_VERSION=${ALIYUNPAN_VER} \
